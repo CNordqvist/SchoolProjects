@@ -5,22 +5,22 @@ while (true) {
     Random random = new Random();
     string line = "29535123p48723487597645723645";
     char input;
-
+    double sum = 0;
+    
     //användar meny
-
     Console.WriteLine("\nVill du göra en egen string? y/n. s för stop");
     char.TryParse(Console.ReadLine(), out input);
-
+    
     if (input == 'y')
     {
         Console.WriteLine("Var god och skriv in den sträng du vill använda");
         line = Console.ReadLine();
-    } 
+    }
     else if (input == 's')
     {
         break;
     }
-    else if (input != 'n') 
+    else if (input != 'n')
     {
         Console.WriteLine("Unrecognized character");
         continue;
@@ -30,6 +30,7 @@ while (true) {
     for (int i = 0; i < line.Length-1; i++)
     {
         int color = random.Next(4);
+        string lineNums = "";
 
         if (!char.IsDigit(line[i]))
         {
@@ -45,26 +46,13 @@ while (true) {
 
             //hitta sista siffran i ett tal som stämmer med kriterierna, printa linjen
             else if (line[j] == line[i]) 
-                
             {
                 for (int l = 0; l < line.Length; l++)
                 {
                     if (l >= i && l <= j)
                     {
-                        switch (color) {
-                            case 0:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                break;
-                            case 1:
-                                Console.ForegroundColor = ConsoleColor.DarkRed;
-                                break;
-                            case 2:
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                break;
-                            case 3:
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                break;
-                        }
+                        lineNums += line[l];
+                        ColorSwitch(color);
                         Console.Write(line[l]);
                         Console.ResetColor();
                     }
@@ -74,12 +62,34 @@ while (true) {
                     }
                     
                 }
+                sum += double.Parse(lineNums);
                 Console.WriteLine("");
                 break;
             }
+            
         }
     }
+    Console.WriteLine("\nAll the colored numbers add up to: " + sum);
 }
+
+ConsoleColor ColorSwitch(int color)
+{
+    switch (color)
+    {
+        case 0:
+            return Console.ForegroundColor = ConsoleColor.Green;
+        case 1:
+            return Console.ForegroundColor = ConsoleColor.DarkRed;
+        case 2:
+            return Console.ForegroundColor = ConsoleColor.Magenta;
+        case 3:
+            return Console.ForegroundColor = ConsoleColor.Blue;
+        default:
+            return Console.ForegroundColor = ConsoleColor.Red;
+    }
+}
+
+
 
 // 
 /*
@@ -110,3 +120,45 @@ for (int i = 0; i < userString1.Length; i++)
     }
 }
 */
+/*
+int[] tal = { 1, 3, 2, 5, 4, 9 };
+int temp = 0;
+
+for (int i = 0; i < tal.Length-1; i++)
+{
+    for (int j = i+1; j < tal.Length; j++)
+    {
+
+        if (tal[i] > tal[j])
+        {
+            temp = tal[i];
+            tal[i] = tal[j];
+            tal[j] = temp;
+        }
+
+    }
+}
+for (int k = 0; k < tal.Length; k++)
+{
+    Console.Write(tal[k] + " ");
+}
+
+int[] tal = { 1, 3, 2, 5, 4, 9 };
+int[] sorted = new int[tal.Length];
+int temp = 0;
+
+for (int j = 0; j < tal.Length; j++)
+{
+    for (int i = 0; i < tal.Length; i++)
+    {
+       if (tal[j] < sorted[i])
+        {
+            sorted[i] = tal[j];
+        }
+    }
+}
+
+for (int k = 0; k < tal.Length; k++)
+{
+    Console.Write(sorted[k] + " ");
+}*/
