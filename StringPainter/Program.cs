@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+
+/*
 while (true) {
   
     Random random = new Random();
@@ -88,9 +90,144 @@ ConsoleColor ColorSwitch(int color)
             return Console.ForegroundColor = ConsoleColor.Red;
     }
 }
+*/
+// övning 19
 
 
+Random random = new Random();
 
+ConsoleKey key;
+
+//storlek på arena med kant
+int[] box = {
+ /* Height */ 13,
+ /* Width  */ 13 };
+//Startposition of player
+int[] player = {
+/* Yaxis */ box[0]/2,
+/* Xaxis */ box[1]/2 };
+
+char[,] gameField = new char[box[0], box[1]];
+
+DrawBox(box);
+LevelEdit(random, gameField);
+
+while (true)
+{
+    
+    Print(gameField, player);
+    MovePlayer(gameField, player);
+
+    Console.Clear();
+
+}
+
+char[,] DrawBox(int[] box)
+{
+
+    //Y
+    for (int i = 0; i < box[0]; i++)
+    {
+        //X
+        for (int j = 0; j < box[1]; j++)
+        {
+
+            if (i == 0 || i == box[0]-1 || j == 0 || j == box[1]-1)
+            {
+                gameField[i, j] = '#';
+            }
+            else
+            {
+                gameField[i, j] = '-';
+            }
+
+        }
+    }
+    return gameField;
+}
+
+char[,] LevelEdit(Random random,char[,] gameField)
+{
+    //Mängd stenar, minst 5%, max 20%
+    //X-2 * Y-2 = arenan utan kanten
+    int slumpMängd = random.Next(
+        (gameField.GetLength(0) - 2) * (gameField.GetLength(1) - 2) / 20, //min
+        (gameField.GetLength(0) - 2) * (gameField.GetLength(1) - 2) / 5 //max
+        ) ;
+
+    for (int i = 0; i < slumpMängd; i++)
+    {
+        //Stenens Y = random mellan 2 till (maxlängd - 2) pga kanten, samma med X
+        gameField[random.Next(2, gameField.GetLength(0)-2), random.Next(2, gameField.GetLength(1)-2)] = '\x263c';
+    }
+
+
+    return gameField;
+    };
+
+
+void Print(char[,] gameField, int[] player)
+{
+    for (int i = 0; i < gameField.GetLength(0); i++)
+    {
+        for (int j = 0; j < gameField.GetLength(1); j++)
+        {
+            if (i == player[0] && j == player[1])
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("@");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.Write(gameField[i, j]);
+            }
+        }
+        Console.WriteLine();
+    }
+}
+
+int[] MovePlayer(char[,] gameField, int[] player)
+{
+    key = Console.ReadKey(true).Key;
+    //Om nästa steg inte är restricted, ta det
+    if (key == ConsoleKey.UpArrow
+        && gameField[player[0]-1,player[1]] != '#'
+        && gameField[player[0] - 1, player[1]] != '\x263c')
+    {
+        player[0] -= 1;
+    }
+    else if (key == ConsoleKey.DownArrow
+        && gameField[player[0] + 1, player[1]] != '#'
+        && gameField[player[0] + 1, player[1]] != '\x263c')
+    {
+        player[0] += 1;
+    }
+    else if (key == ConsoleKey.LeftArrow 
+        && gameField[player[0], player[1] -1] != '#'
+        && gameField[player[0], player[1] - 1] != '\x263c')
+    {
+        player[1] -= 1;
+    }
+    else if (key == ConsoleKey.RightArrow 
+        && gameField[player[0], player[1] +1] != '#'
+        && gameField[player[0], player[1] + 1] != '\x263c')
+    {
+        player[1] += 1;
+    }
+    return player;
+}
+/*
+ for (int y = 0; y < box[0]; y++)
+        {
+            for (int j = 0; j < box[1]; j++)
+            {
+
+                
+            }
+            Console.WriteLine(" ");
+        }
+*/
 // 
 /*
 // be om text #1
