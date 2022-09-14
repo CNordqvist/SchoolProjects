@@ -1,150 +1,37 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-
-/*
-while (true) {
-  
-    Random random = new Random();
-    string line = "29535123p48723487597645723645";
-    char input;
-    double sum = 0;
-    
-    //användar meny
-    Console.WriteLine("\nVill du göra en egen string? y/n. s för stop");
-    char.TryParse(Console.ReadLine(), out input);
-    
-    if (input == 'y')
-    {
-        Console.WriteLine("Var god och skriv in den sträng du vill använda");
-        line = Console.ReadLine();
-    }
-    else if (input == 's')
-    {
-        break;
-    }
-    else if (input != 'n')
-    {
-        Console.WriteLine("Unrecognized character");
-        continue;
-    }
-
-
-    for (int i = 0; i < line.Length-1; i++)
-    {
-        int color = random.Next(4);
-        string lineNums = "";
-
-        if (!char.IsDigit(line[i]))
-        {
-            continue;
-        }
-
-        for (int j = i+1; j < line.Length; j++)
-        {
-            if (!char.IsDigit(line[j]))
-            {
-                break;
-            }
-
-            //hitta sista siffran i ett tal som stämmer med kriterierna, printa linjen
-            else if (line[j] == line[i]) 
-            {
-                for (int l = 0; l < line.Length; l++)
-                {
-                    if (l >= i && l <= j)
-                    {
-                        lineNums += line[l];
-                        ColorSwitch(color);
-                        Console.Write(line[l]);
-                        Console.ResetColor();
-                    }
-                    else
-                    {
-                        Console.Write(line[l]);
-                    }
-                    
-                }
-                sum += double.Parse(lineNums);
-                Console.WriteLine("");
-                break;
-            }
-            
-        }
-    }
-    Console.WriteLine("\nAll the colored numbers add up to: " + sum);
-}
-
-ConsoleColor ColorSwitch(int color)
-{
-    switch (color)
-    {
-        case 0:
-            return Console.ForegroundColor = ConsoleColor.Green;
-        case 1:
-            return Console.ForegroundColor = ConsoleColor.DarkRed;
-        case 2:
-            return Console.ForegroundColor = ConsoleColor.Magenta;
-        case 3:
-            return Console.ForegroundColor = ConsoleColor.Blue;
-        default:
-            return Console.ForegroundColor = ConsoleColor.Red;
-    }
-}
-*/
-// övning 19
-
-
+﻿
 Random random = new Random();
 
 ConsoleKey key;
 
-//storlek på arena med kant
-int[] box = {
- /* Height */ 13,
- /* Width  */ 13 };
-//Startposition of player
-int[] player = {
-/* Yaxis */ box[0]/2,
-/* Xaxis */ box[1]/2 };
+int[] box = new int[2];
+Meny(box);
+int[] player = new int[2] { box[0] / 2, box[1] / 2 };
 
 char[,] gameField = new char[box[0], box[1]];
-
 DrawBox(box);
 LevelEdit(random, gameField);
-
+Console.Clear();
+AppleSpawner(random);
 while (true)
 {
-    
+    int apples = 1;
+    int[,] playerTail = new int[apples, apples];
+    char[] nextStep = new char[2];
     Print(gameField, player);
-    MovePlayer(gameField, player);
+    ReadNext(gameField, player, nextStep);
+    MovePlayer(nextStep);
+        
+    if (nextStep[1] == 'A')
+    {
+        apples++;
+        AppleSpawner(random);
+
+    }
 
     Console.Clear();
 
 }
 
-char[,] DrawBox(int[] box)
-{
-
-    //Y
-    for (int i = 0; i < box[0]; i++)
-    {
-        //X
-        for (int j = 0; j < box[1]; j++)
-        {
-
-            if (i == 0 || i == box[0]-1 || j == 0 || j == box[1]-1)
-            {
-                gameField[i, j] = '#';
-            }
-            else
-            {
-                gameField[i, j] = '-';
-            }
-
-        }
-    }
-    return gameField;
-}
 
 char[,] LevelEdit(Random random,char[,] gameField)
 {
@@ -158,9 +45,8 @@ char[,] LevelEdit(Random random,char[,] gameField)
     for (int i = 0; i < slumpMängd; i++)
     {
         //Stenens Y = random mellan 2 till (maxlängd - 2) pga kanten, samma med X
-        gameField[random.Next(2, gameField.GetLength(0)-2), random.Next(2, gameField.GetLength(1)-2)] = '\x263c';
+        gameField[random.Next(1, gameField.GetLength(0)-1), random.Next(1, gameField.GetLength(1)-1)] = 'O';
     }
-
 
     return gameField;
     };
@@ -187,36 +73,114 @@ void Print(char[,] gameField, int[] player)
     }
 }
 
-int[] MovePlayer(char[,] gameField, int[] player)
+char[] ReadNext(char[,] gameField, int[] player, char[] nextStep)
 {
+    
     key = Console.ReadKey(true).Key;
-    //Om nästa steg inte är restricted, ta det
-    if (key == ConsoleKey.UpArrow
-        && gameField[player[0]-1,player[1]] != '#'
-        && gameField[player[0] - 1, player[1]] != '\x263c')
+    //Spara rikning och vilket tecken som finns där
+    if (key == ConsoleKey.UpArrow)
     {
-        player[0] -= 1;
+        nextStep[0] = 'w';
+        nextStep[1] = gameField[player[0]-1, player[1]];
     }
-    else if (key == ConsoleKey.DownArrow
-        && gameField[player[0] + 1, player[1]] != '#'
-        && gameField[player[0] + 1, player[1]] != '\x263c')
+    else if (key == ConsoleKey.DownArrow)
     {
-        player[0] += 1;
+        nextStep[0] = 's';
+        nextStep[1] = gameField[player[0]+1, player[1]];
     }
-    else if (key == ConsoleKey.LeftArrow 
-        && gameField[player[0], player[1] -1] != '#'
-        && gameField[player[0], player[1] - 1] != '\x263c')
+    else if (key == ConsoleKey.LeftArrow) 
+    { 
+        nextStep[0] = 'd';
+        nextStep[1] = gameField[player[0], player[1] - 1];
+    }
+    else if (key == ConsoleKey.RightArrow)
     {
-        player[1] -= 1;
+        nextStep[0] = 'a';
+        nextStep[1] = gameField[player[0], player[1] + 1];
     }
-    else if (key == ConsoleKey.RightArrow 
-        && gameField[player[0], player[1] +1] != '#'
-        && gameField[player[0], player[1] + 1] != '\x263c')
+    return nextStep;
+}
+int[] MovePlayer(char[] nextStep)
+    //ta steget och spara i player
+{
+    if (nextStep[0] == 'w' && nextStep[1] != '#' && nextStep[1] != 'O')
     {
-        player[1] += 1;
+        player[0]--;
     }
+    else if (nextStep[0] == 's' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[0]++;
+    }
+    else if (nextStep[0] == 'd' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[1]--;
+    }
+    else if (nextStep[0] == 'a' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[1]++;
+    }
+
     return player;
 }
+
+char[,] DrawBox(int[] box)
+{
+
+    //Y
+    for (int i = 0; i < box[0]; i++)
+    {
+        //X
+        for (int j = 0; j < box[1]; j++)
+        {
+
+            if (i == 0 || i == box[0] - 1 || j == 0 || j == box[1] - 1)
+            {
+                gameField[i, j] = '#';
+            }
+            else
+            {
+                gameField[i, j] = '-';
+            }
+
+        }
+    }
+    return gameField;
+}
+int[] Meny(int[] box)
+{ 
+    Console.WriteLine("Hur hög ska spelarenan vara?");
+    try 
+    {
+        box[0] = int.Parse(Console.ReadLine());
+    } catch { }
+    Console.WriteLine("Hur bred ska spelarenan vara?");
+    try 
+    {
+        box[1] = int.Parse(Console.ReadLine());
+    }
+    catch { }
+    return box;
+}
+
+char[,] AppleSpawner(Random random)
+{
+    //slumpa fram ett äpple på tom plats
+    while (true)
+    {
+        int y = random.Next(1, box[0] - 1);
+        int x = random.Next(1, box[1] - 1);
+        if (gameField[y, x] != 'O')
+        {
+            gameField[y, x] = 'A';
+            break;
+        }
+    }
+    return gameField;
+}
+
+
+
+
 /*
  for (int y = 0; y < box[0]; y++)
         {
