@@ -3,27 +3,35 @@ Random random = new Random();
 
 ConsoleKey key;
 
-//storlek på arena med kant
 int[] box = new int[2];
-int[] player = new int[2];
-
 Meny(box);
-PlayerSpawn(box);
+int[] player = new int[2] { box[0] / 2, box[1] / 2 };
 
 char[,] gameField = new char[box[0], box[1]];
 DrawBox(box);
 LevelEdit(random, gameField);
 Console.Clear();
-
+AppleSpawner(random);
 while (true)
 {
-    AppleSpawner(random);
+    int apples = 1;
+    int[,] playerTail = new int[apples, apples];
+    char[] nextStep = new char[2];
     Print(gameField, player);
-    MovePlayer(gameField, player);
+    ReadNext(gameField, player, nextStep);
+    MovePlayer(nextStep);
+        
+    if (nextStep[1] == 'A')
+    {
+        apples++;
+        AppleSpawner(random);
+
+    }
 
     Console.Clear();
 
 }
+
 
 char[,] LevelEdit(Random random,char[,] gameField)
 {
@@ -65,36 +73,56 @@ void Print(char[,] gameField, int[] player)
     }
 }
 
-int[] MovePlayer(char[,] gameField, int[] player)
+char[] ReadNext(char[,] gameField, int[] player, char[] nextStep)
 {
+    
     key = Console.ReadKey(true).Key;
-    //Om nästa steg inte är restricted, ta det
-    if (key == ConsoleKey.UpArrow
-        && gameField[player[0]-1,player[1]] != '#'
-        && gameField[player[0] - 1, player[1]] != 'O')
+    //Spara rikning och vilket tecken som finns där
+    if (key == ConsoleKey.UpArrow)
     {
-        player[0] -= 1;
+        nextStep[0] = 'w';
+        nextStep[1] = gameField[player[0]-1, player[1]];
     }
-    else if (key == ConsoleKey.DownArrow
-        && gameField[player[0] + 1, player[1]] != '#'
-        && gameField[player[0] + 1, player[1]] != 'O')
+    else if (key == ConsoleKey.DownArrow)
     {
-        player[0] += 1;
+        nextStep[0] = 's';
+        nextStep[1] = gameField[player[0]+1, player[1]];
     }
-    else if (key == ConsoleKey.LeftArrow 
-        && gameField[player[0], player[1] -1] != '#'
-        && gameField[player[0], player[1] - 1] != 'O')
+    else if (key == ConsoleKey.LeftArrow) 
+    { 
+        nextStep[0] = 'd';
+        nextStep[1] = gameField[player[0], player[1] - 1];
+    }
+    else if (key == ConsoleKey.RightArrow)
     {
-        player[1] -= 1;
+        nextStep[0] = 'a';
+        nextStep[1] = gameField[player[0], player[1] + 1];
     }
-    else if (key == ConsoleKey.RightArrow 
-        && gameField[player[0], player[1] +1] != '#'
-        && gameField[player[0], player[1] + 1] != 'O')
+    return nextStep;
+}
+int[] MovePlayer(char[] nextStep)
+    //ta steget och spara i player
+{
+    if (nextStep[0] == 'w' && nextStep[1] != '#' && nextStep[1] != 'O')
     {
-        player[1] += 1;
+        player[0]--;
     }
+    else if (nextStep[0] == 's' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[0]++;
+    }
+    else if (nextStep[0] == 'd' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[1]--;
+    }
+    else if (nextStep[0] == 'a' && nextStep[1] != '#' && nextStep[1] != 'O')
+    {
+        player[1]++;
+    }
+
     return player;
 }
+
 char[,] DrawBox(int[] box)
 {
 
@@ -118,8 +146,8 @@ char[,] DrawBox(int[] box)
     }
     return gameField;
 }
-int[] Meny(int[] box) {
-
+int[] Meny(int[] box)
+{ 
     Console.WriteLine("Hur hög ska spelarenan vara?");
     try 
     {
@@ -133,27 +161,26 @@ int[] Meny(int[] box) {
     catch { }
     return box;
 }
-int[] PlayerSpawn(int[] box)
-{
-    player[0] = box[0]/2;
-    player[1] = box[1]/2;
-    return player;
-}
+
 char[,] AppleSpawner(Random random)
 {
-    
-        while (true)
+    //slumpa fram ett äpple på tom plats
+    while (true)
+    {
+        int y = random.Next(1, box[0] - 1);
+        int x = random.Next(1, box[1] - 1);
+        if (gameField[y, x] != 'O')
         {
-            int y = random.Next(1, box[0] - 1);
-            int x = random.Next(1, box[1] - 1);
-            if (gameField[y,x] != 'O')
-            {
             gameField[y, x] = 'A';
-                break;
-            }
+            break;
         }
+    }
     return gameField;
 }
+
+
+
+
 /*
  for (int y = 0; y < box[0]; y++)
         {
