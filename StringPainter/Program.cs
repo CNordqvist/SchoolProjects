@@ -23,9 +23,15 @@ while (true)
         
     if (nextStep[1] == 'A')
     {
+        int[,] temp = new int[1,1];
         apples++;
         AppleSpawner(random);
-
+        for (int i = 0; i < playerTail.Length-1; i++)
+        {
+            temp[0,0] = playerTail[i,i];
+            playerTail[i + 1, i + 1] = playerTail[i, i];
+            player
+        }
     }
 
     Console.Clear();

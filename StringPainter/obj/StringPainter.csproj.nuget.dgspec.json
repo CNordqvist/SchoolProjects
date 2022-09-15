@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kolle\\source\\repos\\SchoolProjects\\StringPainter\\StringPainter.csproj": {}
+    "C:\\Users\\kolle\\Documents\\GitHub\\SchoolProjects\\StringPainter\\StringPainter.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kolle\\source\\repos\\SchoolProjects\\StringPainter\\StringPainter.csproj": {
+    "C:\\Users\\kolle\\Documents\\GitHub\\SchoolProjects\\StringPainter\\StringPainter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kolle\\source\\repos\\SchoolProjects\\StringPainter\\StringPainter.csproj",
+        "projectUniqueName": "C:\\Users\\kolle\\Documents\\GitHub\\SchoolProjects\\StringPainter\\StringPainter.csproj",
         "projectName": "StringPainter",
-        "projectPath": "C:\\Users\\kolle\\source\\repos\\SchoolProjects\\StringPainter\\StringPainter.csproj",
+        "projectPath": "C:\\Users\\kolle\\Documents\\GitHub\\SchoolProjects\\StringPainter\\StringPainter.csproj",
         "packagesPath": "C:\\Users\\kolle\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kolle\\source\\repos\\SchoolProjects\\StringPainter\\obj\\",
+        "outputPath": "C:\\Users\\kolle\\Documents\\GitHub\\SchoolProjects\\StringPainter\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
           "C:\\Users\\kolle\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,8 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://www.myget.org/F/discord-net/api/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
